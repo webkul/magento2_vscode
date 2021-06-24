@@ -1,0 +1,140 @@
+{
+    "Insert File Signature": {
+        "prefix": "!wkfilesignature",
+        "body": [
+            "<!--",
+            "/**",
+            " * ${1:Company Name}",
+            " *",
+            " * @category  ${2:Category}",
+            " * @package   ${3:Vendor_ModuleName}",
+            " * @author    ${4:Author}",
+            " * @copyright ${5:Copyright}",
+            " * @license   ${6:License}",
+            " */",
+            "-->"
+        ],
+        "description": "Inserts organization's signature for Magento modules."
+    },
+    "Creates module.xml": {
+        "prefix": "!wkmodule",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "",
+            "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:Module/etc/module.xsd\">",
+            "\t<module name=\"${2:Vendor_ModuleName}\">",
+            "\t</module>",
+            "</config>"
+        ],
+        "description": "Inserts module.xml data"
+    },
+    "Creates di.xml": {
+        "prefix": "!wkdi",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "",
+            "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:ObjectManager/etc/config.xsd\">",
+            "\t$0",
+            "</config>"
+        ],
+        "description": "Inserts di.xml files basic structure."
+    },
+    "Create plugin": {
+        "prefix": "!wkplugin",
+        "body": [
+            "<type name=\"\">",
+            "\t<plugin name=\"\" type=\"\" sortOrder=\"\"/>",
+            "</type>"
+        ],
+        "description": "Create new plugin."
+    },
+    "Create preference": {
+        "prefix": "!wkpreference",
+        "body": [
+            "<preference for=\"\" type=\"\"/>"
+        ],
+        "description": "Create new preference."
+    },
+    "Create observer": {
+        "prefix": "!wkobserver",
+        "body": [
+            "<event name=\"$0\">",
+            "\t<observer name=\"\" instance=\"\" />",
+            "</event>"
+        ],
+        "description": "Create new observer."
+    },
+    "Creates events.xml": {
+        "prefix": "!wkevents",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "",
+            "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:Event/etc/events.xsd\">",
+            "\t$0",
+            "</config>"
+        ],
+        "description": "Inserts events file basic structure."
+    },
+    "Create frontend router": {
+		"prefix": "!wkfrontrouter",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:App/etc/routes.xsd\">",
+			"\t<router id=\"standard\">",
+			"\t\t<route id=\"${1:routeName}\" frontName=\"${2:routeName}\">",
+			"\t\t\t<module name=\"${3:Vendor_Module}\"/>",
+			"\t\t</route>",
+			"\t</router>",
+			"</config>"
+		],
+		"description": "Magento 2 Routes file for Frontend"
+	},
+    "Create backend router": {
+		"prefix": "!wkbackrouter",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:App/etc/routes.xsd\">",
+			"\t<router id=\"admin\">",
+			"\t\t<route id=\"${1:routeName}\" frontName=\"${2:routeName}\">",
+			"\t\t\t<module name=\"${3:Vendor_Module}\"/>",
+			"\t\t</route>",
+			"\t</router>",
+			"</config>"
+		],
+		"description": "Magento 2 Routes file for Adminhtml"
+	},
+    "Config File": {
+		"prefix": "!wkconfig",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:module:Magento_Store:etc/config.xsd\">",
+			"\t<default>",
+			"\t\t$0",
+			"\t</default>",
+			"</config>"
+		],
+		"description": "Magento 2 Config file"
+	},
+    "Layout File": {
+		"prefix": "!wklayout",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<page xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:View/Layout/etc/page_configuration.xsd\">",
+			"\t$0",
+			"</page>"
+		],
+		"description": "Magento 2 Layout file"
+	},
+	"CronTab File": {
+		"prefix": "!wkcrontab",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:module:Magento_Cron:etc/crontab.xsd\">",
+			"\t<group id=\"default\">",
+			"\t\t$0",
+			"\t</group>",
+			"</config>"
+		],
+		"description": "Magento 2 CronTab file"
+	}
+}

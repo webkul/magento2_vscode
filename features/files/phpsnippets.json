@@ -1,0 +1,30 @@
+{
+    "Insert File Signature": {
+        "prefix": "!wkfilesignature",
+        "body": [
+            "/**",
+            " * ${1:Company Name}",
+            " *",
+            " * @category  ${2:Category}",
+            " * @package   ${3:Vendor_ModuleName}",
+            " * @author    ${4:Author}",
+            " * @copyright ${5:Copyright}",
+            " * @license   ${6:License}",
+            " */"
+        ],
+        "description": "Inserts organization's signature for Magento modules."
+    },
+    "Creates registration.php": {
+        "prefix": "!wkregistration",
+        "body": [
+            "<?php",
+            "",
+            "\\Magento\\Framework\\Component\\ComponentRegistrar::register(",
+            "\t\\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,",
+            "\t'${1:Vendor_ModuleName}',",
+            "\t__DIR__",
+            ");"
+        ],
+        "description": "Inserts registration file data for Module component."
+    }
+}
