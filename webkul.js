@@ -16,7 +16,9 @@ function activate(context) {
 	});
 	let generateFiles = vscode.commands.registerCommand('automagedev.generateModule', async () => {
         const options = {
-            BasicModule: GenerateFile.createModule
+            BasicModule: GenerateFile.createModule,
+            Helper: GenerateFile.createHelper,
+            Controller: GenerateFile.createController
         };
         const quickPick = vscode.window.createQuickPick();
         quickPick.items = Object.keys(options).map(label => ({ label }));
