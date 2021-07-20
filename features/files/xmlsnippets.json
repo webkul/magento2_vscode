@@ -39,6 +39,30 @@
         ],
         "description": "Inserts di.xml files basic structure."
     },
+    "Creates db_schema.xml": {
+        "prefix": "!wkdbSchema",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "",
+            "<schema xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd\">",
+            "\t$0",
+            "</schema>"
+        ],
+        "description": "Inserts db_schema.xml files basic structure."
+    },
+    "Creates system.xml": {
+        "prefix": "!wksystemxml",
+        "body": [
+            "<?xml version=\"1.0\"?>",
+            "",
+            "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:module:Magento_Config:etc/system_file.xsd\">",
+            "\t<system>",
+            "\t\t$0",
+            "\t</system>",
+            "</config>"
+        ],
+        "description": "Inserts db_schema.xml files basic structure."
+    },
     "Create plugin": {
         "prefix": "!wkplugin",
         "body": [

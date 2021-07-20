@@ -18,7 +18,9 @@ function activate(context) {
         const options = {
             BasicModule: GenerateFile.createModule,
             Helper: GenerateFile.createHelper,
-            Controller: GenerateFile.createController
+            Controller: GenerateFile.createController,
+            ShippingModule: GenerateFile.createShippingMethod,
+            PaymentMethod: GenerateFile.createPaymentMethod
         };
         const quickPick = vscode.window.createQuickPick();
         quickPick.items = Object.keys(options).map(label => ({ label }));
@@ -34,6 +36,9 @@ function activate(context) {
 	
 	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(phpselector, new PathAutocompleteProvider.PathAutocomplete(), '->'));
 	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(xmlselector, new PathAutocompleteProvider.EventsAutocomplete(), '"'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(xmlselector, new PathAutocompleteProvider.DbschemaAutocomplete(), ' ', '<'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(xmlselector, new PathAutocompleteProvider.LayoutAutocomplete(), '<'));
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(xmlselector, new PathAutocompleteProvider.ConfigurationAutocomplete(), '<'));
 	context.subscriptions.push(snips);
 	context.subscriptions.push(generateFiles);
 }

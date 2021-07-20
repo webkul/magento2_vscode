@@ -29,4 +29,8 @@ Advanced Magento 2 AutoSuggestion extension for Visual Studio Code.
 
 Magento root folder should be opened in the workspace.
 
+## User Guide
+
+For extension's working process, follow [user guide](https://webkul.com/blog/magento2-visual-studio-code-plugin/). 
+
 **Enjoy!**

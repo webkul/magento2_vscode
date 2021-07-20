@@ -2,6 +2,9 @@ const find = require("find");
 const vs = require("vscode");
 const fs = require("fs");
 const eventsList = require("./EventsList");
+const schemaList = require("./DbSchema");
+const layoutList = require("./Layouts");
+const configList = require("./Configurations");
 class PathAutocomplete {
     provideCompletionItems(document, position, token) {
         try {
@@ -157,5 +160,100 @@ class EventsAutocomplete {
         }
     }
 }
+class DbschemaAutocomplete {
+    provideCompletionItems(document, position) {
+        try {
+            let fileName = document.fileName,
+            currentLine = document.getText(document.lineAt(position).range), el = [];
+            
+            if (fileName.includes('db_schema.xml')) {
+                if (currentLine.includes('column')) {
+                    el = schemaList.getColumns().map((obj) => {
+                        let completeIt = new vs.CompletionItem(String(obj.name));
+                        completeIt.kind = vs.CompletionItemKind.Field;
+                        completeIt.insertText = obj.value;
+                        return completeIt;
+                    })
+                } else if (currentLine.includes('constraint')) {
+                    el = schemaList.getConstraints().map((obj) => {
+                        let completeIt = new vs.CompletionItem(String(obj.name));
+                        completeIt.kind = vs.CompletionItemKind.Field;
+                        completeIt.insertText = obj.value;
+                        return completeIt;
+                    })
+                } else if (currentLine.includes('table')) {
+                    el = schemaList.getTable().map((obj) => {
+                        let completeIt = new vs.CompletionItem(String(obj.name));
+                        completeIt.kind = vs.CompletionItemKind.Field;
+                        completeIt.insertText = obj.value;
+                        return completeIt;
+                    })
+                } else {
+                    el = schemaList.getTypes().map((type) => {
+                        let completeIt = new vs.CompletionItem(String(type));
+                        completeIt.kind = vs.CompletionItemKind.Keyword;
+                        return completeIt;
+                    })
+                }
+            }
+            return el;            
+        } catch (err) {
+            console.log(err);
+            return [];
+        }
+    }
+}
+class LayoutAutocomplete {
+    provideCompletionItems(document, position) {
+        try {
+            let fileName = document.fileName, el = [];
+            
+            if (fileName.includes('layout')) {
+                el = layoutList.getTypes().map((obj) => {
+                    let completeIt = new vs.CompletionItem(String(obj.name));
+                    completeIt.kind = vs.CompletionItemKind.Snippet;
+                    completeIt.insertText = obj.value;
+                    return completeIt;
+                })
+            }
+            return el;            
+        } catch (err) {
+            console.log(err);
+            return [];
+        }
+    }
+}
+class ConfigurationAutocomplete {
+    provideCompletionItems(document, position) {
+        try {
+            let fileName = document.fileName,
+            currentLine = document.getText(document.lineAt(position).range), el = [];
+            
+            if (fileName.includes('system.xml')) {
+                if (currentLine.includes('validate')) {
+                    el = configList.getValidations().map((validatn) => {
+                        let completeIt = new vs.CompletionItem(String(validatn));
+                        completeIt.kind = vs.CompletionItemKind.Value;
+                        return completeIt;
+                    })
+                } else {
+                    el = configList.getTypes().map((obj) => {
+                        let completeIt = new vs.CompletionItem(String(obj.name));
+                        completeIt.kind = vs.CompletionItemKind.Snippet;
+                        completeIt.insertText = obj.value;
+                        return completeIt;
+                    })
+                }
+            }
+            return el;            
+        } catch (err) {
+            console.log(err);
+            return [];
+        }
+    }
+}
 exports.PathAutocomplete = PathAutocomplete;
 exports.EventsAutocomplete = EventsAutocomplete;
+exports.DbschemaAutocomplete = DbschemaAutocomplete;
+exports.ConfigurationAutocomplete = ConfigurationAutocomplete;
+exports.LayoutAutocomplete = LayoutAutocomplete;

@@ -85,7 +85,7 @@ function createControllerFile(moduleDir, moduleName, area, route, controller, ac
     actionTemplate = actionTemplate.replace('%module_name%', moduleName.replace('_', '\\'))
                                     .replace('%controller%', controller.replace('/', '\\'))
                                     .replace('%class_name%', action);
-    routeTemplate = routeTemplate.replace('%module_name%', moduleName).replaceAll('%route%', route);
+    routeTemplate = routeTemplate.replace('%module_name%', moduleName).replace(/%route%/g, route);
     let data = [
         new Uint8Array(str2ab_1.str2ab(actionTemplate)),
         new Uint8Array(str2ab_1.str2ab(routeTemplate))
@@ -123,6 +123,153 @@ function createHelperFile(moduleDir, moduleName) {
     let data = new Uint8Array(str2ab_1.str2ab(helperTemplate));
     vscode_1.workspace.fs.writeFile(helperUri, data);
 }
+
+/**
+ * create shipping method files
+ */
+async function createShippingMethod() {
+    const wsPath = getWsPath(), userInput = await vscode_1.window.showInputBox({
+        value: 'Vendor_Module: custom_shipping: Custom Shipping',
+        placeHolder: 'Enter module name with shipping code and name'
+    });
+
+    if (userInput !== undefined) {
+        let input = userInput.split(':'), moduleName = input[0], shippingCode = input[1].trim(),
+        name = input[2].trim();
+        let moduleDir = getModuleBasePath(wsPath, moduleName);
+        if (fs.existsSync(moduleDir)) createShippingFile(moduleDir, moduleName, shippingCode, name);
+        else vscode_1.window.showInformationMessage('Invalid module name.');
+    } else vscode_1.window.showInformationMessage('Invalid input.');
+}
+
+/**
+ * create all files for shipping method
+ * @param {*} moduleDir 
+ * @param {*} moduleName 
+ * @param {*} shippingCode 
+ * @param {*} name 
+ */
+function createShippingFile(moduleDir, moduleName, shippingCode, name) {
+    var fileName = capitalize(name.replace(/\s/, ''));
+    let dir = [
+        '/Model',
+        '/Model/' + fileName,
+        '/etc/adminhtml'
+    ], systemXmlTemplate = ft.systemXmlTemplate,
+    configXmlTemplate = ft.configXmlTemplate,
+    carrierTemplate = ft.carrierFileTemplate;
+    systemXmlTemplate = systemXmlTemplate.replace('%shipping_code%', shippingCode)
+                                    .replace('%name%', capitalize(name));
+    configXmlTemplate = configXmlTemplate.replace('%moduleName%', moduleName.replace('_', '\\'))
+                                            .replace(/%shipping_code%/g, shippingCode)
+                                            .replace(/%name%/g, fileName);
+    carrierTemplate = carrierTemplate.replace('%moduleName%', moduleName.replace('_', '\\'))
+                                        .replace(/%shipping_code%/g, shippingCode)
+                                        .replace(/%name%/g, fileName);
+    let data = [
+        new Uint8Array(str2ab_1.str2ab(systemXmlTemplate)),
+        new Uint8Array(str2ab_1.str2ab(configXmlTemplate)),
+        new Uint8Array(str2ab_1.str2ab(carrierTemplate))
+    ],
+    uri = [
+        vscode_1.Uri.file(moduleDir + '/etc/adminhtml/system.xml'),
+        vscode_1.Uri.file(moduleDir + '/etc/config.xml'),
+        vscode_1.Uri.file(moduleDir + '/Model/'+fileName+'/Carrier.php')
+    ];
+    dir.map(fn => {
+        vscode_1.workspace.fs.createDirectory(moduleDir + fn);
+    });
+    data.map((dt, index) => {
+        vscode_1.workspace.fs.writeFile(uri[index], dt);
+    });
+}
+
+/**
+ * generate payment method default files
+ */
+async function createPaymentMethod() {
+    const wsPath = getWsPath(), userInput = await vscode_1.window.showInputBox({
+        value: 'Vendor_Module: custom_payment: Custom Payment',
+        placeHolder: 'Enter module name with payment code and name'
+    });
+
+    if (userInput !== undefined) {
+        let input = userInput.split(':'), moduleName = input[0], paymentCode = input[1].trim(),
+        name = input[2].trim();
+        let moduleDir = getModuleBasePath(wsPath, moduleName);
+        // createPaymentFiles(moduleDir, moduleName, paymentCode, name);
+        if (fs.existsSync(moduleDir)) createPaymentFiles(moduleDir, moduleName, paymentCode, name);
+        else vscode_1.window.showInformationMessage('Invalid module name.');
+    } else vscode_1.window.showInformationMessage('Invalid input.');
+}
+
+/**
+ * create payment files
+ * @param {*} moduleDir 
+ * @param {*} moduleName 
+ * @param {*} paymentCode 
+ * @param {*} name 
+ */
+function createPaymentFiles(moduleDir, moduleName, paymentCode, name) {
+    var fileName = capitalize(name.replace(/\s/, ''));
+    let dir = [
+        '/Model',
+        '/etc/adminhtml',
+        '/view/frontend/layout',
+        '/view/frontend/web/template/payment',
+        '/view/frontend/web/js/view/payment/method-render',
+
+    ], systemXmlPaymentTemplate = ft.systemXmlPaymentTemplate,
+    configXmlPaymentTemplate = ft.configXmlPaymentTemplate,
+    paymentModelTemplate = ft.paymentModelTemplate,
+    paymentlayoutFileTemplate = ft.paymentlayoutFileTemplate,
+    paymentHtmlTemplate = ft.paymentHtmlTemplate,
+    methodRenderTemplate = ft.methodRenderTemplate,
+    paymentjsTemplate = ft.paymentjsTemplate;
+    systemXmlPaymentTemplate = systemXmlPaymentTemplate.replace('%payment_code%', paymentCode)
+                                    .replace('%name%', capitalize(name));
+    configXmlPaymentTemplate = configXmlPaymentTemplate.replace('%moduleName%', moduleName.replace('_', '\\'))
+                                            .replace(/%payment_code%/g, paymentCode)
+                                            .replace(/%filename%/g, fileName)
+                                            .replace(/%name%/g, name);
+    paymentModelTemplate = paymentModelTemplate.replace('%moduleName%', moduleName.replace('_', '\\'))
+                                        .replace(/%payment_code%/g, paymentCode)
+                                        .replace(/%filename%/g, fileName);
+
+    paymentlayoutFileTemplate = paymentlayoutFileTemplate.replace('%moduleName%', moduleName)
+                                        .replace(/%payment_code%/g, paymentCode);
+    methodRenderTemplate = methodRenderTemplate.replace('%moduleName%', moduleName)
+                                        .replace(/%payment_code%/g, paymentCode);
+    paymentjsTemplate = paymentjsTemplate.replace('%moduleName%', moduleName)
+                                        .replace(/%payment_code%/g, paymentCode);
+    let data = [
+        new Uint8Array(str2ab_1.str2ab(systemXmlPaymentTemplate)),
+        new Uint8Array(str2ab_1.str2ab(configXmlPaymentTemplate)),
+        new Uint8Array(str2ab_1.str2ab(paymentModelTemplate)),
+        new Uint8Array(str2ab_1.str2ab(paymentlayoutFileTemplate)),
+        new Uint8Array(str2ab_1.str2ab(paymentHtmlTemplate)),
+        new Uint8Array(str2ab_1.str2ab(methodRenderTemplate)),
+        new Uint8Array(str2ab_1.str2ab(paymentjsTemplate))
+    ],
+    uri = [
+        vscode_1.Uri.file(moduleDir + '/etc/adminhtml/system.xml'),
+        vscode_1.Uri.file(moduleDir + '/etc/config.xml'),
+        vscode_1.Uri.file(moduleDir + '/Model/'+fileName+'.php'),
+        vscode_1.Uri.file(moduleDir + '/view/frontend/layout/'+'checkout_index_index.xml'),
+        vscode_1.Uri.file(moduleDir + '/view/frontend/web/template/payment/'+paymentCode+'.html'),
+        vscode_1.Uri.file(moduleDir + '/view/frontend/web/js/view/payment/method-render.js'),
+        vscode_1.Uri.file(moduleDir + '/view/frontend/web/js/view/payment/method-render/'+paymentCode+'.js')
+    ];
+    dir.map(fn => {
+        vscode_1.workspace.fs.createDirectory(moduleDir + fn);
+    });
+    data.map((dt, index) => {
+        vscode_1.workspace.fs.writeFile(uri[index], dt);
+    });
+}
+
 exports.createModule = createModule;
 exports.createController = createController;
 exports.createHelper = createHelper;
+exports.createShippingMethod = createShippingMethod;
+exports.createPaymentMethod = createPaymentMethod;

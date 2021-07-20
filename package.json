@@ -2,11 +2,15 @@
 	"name": "automagedev",
 	"displayName": "AutoMageDev",
 	"description": "Advanced autocomplete support for Magento 2.",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "Webkul",
 	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.18.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/webkul/magento2_vscode.git"
 	},
 	"keywords": [
 		"magento",
@@ -69,5 +73,10 @@
 	},
 	"dependencies": {
 		"find": "^0.3.0"
+	},
+	"__metadata": {
+		"id": "c5b3b2cd-51e5-4566-9f5b-35e1b56a4e3b",
+		"publisherDisplayName": "Webkul",
+		"publisherId": "6856e39c-bc0f-4e07-bbdb-171aef57e73a"
 	}
 }
