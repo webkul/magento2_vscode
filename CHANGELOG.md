@@ -25,3 +25,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Added repository link.
 
 - Added user guide.
+
+## [1.0.4]
+
+- Added shipping and payment method files generation.
+
+- Added autosuggestions for layout.xml, db_schema.xml and system.xml.

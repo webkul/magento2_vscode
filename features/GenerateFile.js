@@ -68,9 +68,12 @@ async function createController() {
     if (userInput !== undefined) {
         let input = userInput.split(':'), moduleName = input[0], area = input[1].trim(),
         [route, controller, action] = input[2].split('/');
-        let moduleDir = getModuleBasePath(wsPath, moduleName);
-        if (fs.existsSync(moduleDir)) createControllerFile(moduleDir, moduleName, area, route.trim(), capitalize(controller), capitalize(action));
-        else vscode_1.window.showInformationMessage('Invalid module name.');
+        if (area !== 'adminhtml' && area !== 'frontend') vscode_1.window.showInformationMessage('Invalid areacode.');
+        else {
+            let moduleDir = getModuleBasePath(wsPath, moduleName);
+            if (fs.existsSync(moduleDir)) createControllerFile(moduleDir, moduleName, area, route.trim(), capitalize(controller), capitalize(action));
+            else vscode_1.window.showInformationMessage('Invalid module name.');
+        }
     } else vscode_1.window.showInformationMessage('Invalid input.');
 }
 function createControllerFile(moduleDir, moduleName, area, route, controller, action) {
@@ -85,7 +88,7 @@ function createControllerFile(moduleDir, moduleName, area, route, controller, ac
     actionTemplate = actionTemplate.replace('%module_name%', moduleName.replace('_', '\\'))
                                     .replace('%controller%', controller.replace('/', '\\'))
                                     .replace('%class_name%', action);
-    routeTemplate = routeTemplate.replace('%module_name%', moduleName).replace(/%route%/g, route);
+    routeTemplate = routeTemplate.replace('%module_name%', moduleName).replaceAll('%route%', route);
     let data = [
         new Uint8Array(str2ab_1.str2ab(actionTemplate)),
         new Uint8Array(str2ab_1.str2ab(routeTemplate))
@@ -127,10 +130,10 @@ function createHelperFile(moduleDir, moduleName) {
 /**
  * create shipping method files
  */
-async function createShippingMethod() {
+ async function createShippingMethod() {
     const wsPath = getWsPath(), userInput = await vscode_1.window.showInputBox({
-        value: 'Vendor_Module: custom_shipping: Custom Shipping',
-        placeHolder: 'Enter module name with shipping code and name'
+        value: 'Vendor_Module: shipping_code: Shipping Label',
+        placeHolder: 'Enter module name with shipping method code (e.g., table_rate) and label (e.g., Table Rate Shipping)'
     });
 
     if (userInput !== undefined) {
@@ -144,10 +147,6 @@ async function createShippingMethod() {
 
 /**
  * create all files for shipping method
- * @param {*} moduleDir 
- * @param {*} moduleName 
- * @param {*} shippingCode 
- * @param {*} name 
  */
 function createShippingFile(moduleDir, moduleName, shippingCode, name) {
     var fileName = capitalize(name.replace(/\s/, ''));
@@ -189,8 +188,8 @@ function createShippingFile(moduleDir, moduleName, shippingCode, name) {
  */
 async function createPaymentMethod() {
     const wsPath = getWsPath(), userInput = await vscode_1.window.showInputBox({
-        value: 'Vendor_Module: custom_payment: Custom Payment',
-        placeHolder: 'Enter module name with payment code and name'
+        value: 'Vendor_Module: payment_code: Payment Label',
+        placeHolder: 'Enter module name with payment method code (e.g., cash_on_delivery) and label (e.g., Cash On Delivery)'
     });
 
     if (userInput !== undefined) {
@@ -205,10 +204,6 @@ async function createPaymentMethod() {
 
 /**
  * create payment files
- * @param {*} moduleDir 
- * @param {*} moduleName 
- * @param {*} paymentCode 
- * @param {*} name 
  */
 function createPaymentFiles(moduleDir, moduleName, paymentCode, name) {
     var fileName = capitalize(name.replace(/\s/, ''));
@@ -217,8 +212,7 @@ function createPaymentFiles(moduleDir, moduleName, paymentCode, name) {
         '/etc/adminhtml',
         '/view/frontend/layout',
         '/view/frontend/web/template/payment',
-        '/view/frontend/web/js/view/payment/method-render',
-
+        '/view/frontend/web/js/view/payment/method-render'
     ], systemXmlPaymentTemplate = ft.systemXmlPaymentTemplate,
     configXmlPaymentTemplate = ft.configXmlPaymentTemplate,
     paymentModelTemplate = ft.paymentModelTemplate,

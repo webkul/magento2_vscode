@@ -2,7 +2,7 @@
 	"name": "automagedev",
 	"displayName": "AutoMageDev",
 	"description": "Advanced autocomplete support for Magento 2.",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"publisher": "Webkul",
 	"icon": "images/icon.png",
 	"engines": {
@@ -73,10 +73,5 @@
 	},
 	"dependencies": {
 		"find": "^0.3.0"
-	},
-	"__metadata": {
-		"id": "c5b3b2cd-51e5-4566-9f5b-35e1b56a4e3b",
-		"publisherDisplayName": "Webkul",
-		"publisherId": "6856e39c-bc0f-4e07-bbdb-171aef57e73a"
 	}
 }

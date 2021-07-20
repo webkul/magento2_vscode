@@ -19,7 +19,7 @@ function activate(context) {
             BasicModule: GenerateFile.createModule,
             Helper: GenerateFile.createHelper,
             Controller: GenerateFile.createController,
-            ShippingModule: GenerateFile.createShippingMethod,
+            ShippingMethod: GenerateFile.createShippingMethod,
             PaymentMethod: GenerateFile.createPaymentMethod
         };
         const quickPick = vscode.window.createQuickPick();
