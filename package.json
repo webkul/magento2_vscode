@@ -2,7 +2,7 @@
 	"name": "automagedev",
 	"displayName": "AutoMageDev",
 	"description": "Advanced autocomplete support for Magento 2.",
-	"version": "1.0.4",
+	"version": "1.0.6",
 	"publisher": "Webkul",
 	"icon": "images/icon.png",
 	"engines": {
@@ -30,6 +30,7 @@
 		"onCommand:automagedev.generateModule"
 	],
 	"main": "./webkul.js",
+	"browser": "./webkul.js",
 	"contributes": {
 		"commands": [
 			{
@@ -57,6 +58,14 @@
 			{
 				"language": "xml",
 				"path": "./features/files/magento.json"
+			},
+			{
+				"language": "html",
+				"path": "./features/files/phtmlsnippets.json"
+			},
+			{
+				"language": "javascript",
+				"path": "./features/files/jssnippets.json"
 			}
 		]
 	},

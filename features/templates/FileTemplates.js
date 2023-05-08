@@ -9,34 +9,34 @@ exports.registrationPhp = "<?php\r\n\
     \t\\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,\r\n\
     \t'%moduleName%',\r\n\
     \t__DIR__\r\n\
-);";
+);\n";
 exports.helperData = "<?php\r\n\
 \r\n\
 namespace %moduleName%\\Helper;\r\n\
 \r\n\
-use Magento\\Framework\\Stdlib\\DateTime\\DateTime;\r\n\
 use Magento\\Customer\\Model\\Session as CustomerSession;\r\n\
+use Magento\\Framework\\Stdlib\\DateTime\\DateTime;\r\n\
 \r\n\
 /**\r\n\
- * helper class.\r\n\
+ * Helper class\r\n\
  *\/\r\n\
 class Data extends \\Magento\\Framework\\App\\Helper\\AbstractHelper\r\n\
-{\r\n\
-\t/**\r\n\
-\t * @param Session $customerSession\r\n\
-\t * @param \\Magento\\Framework\\App\\Helper\\Context $context\r\n\
-\t * @param \\Magento\\Store\\Model\\StoreManagerInterface $storeManager\r\n\
-\t *\/\r\n\
-\tpublic function __construct(\r\n\
-\t\tCustomerSession $customerSession,\r\n\
-\t\t\\Magento\\Framework\\App\\Helper\\Context $context,\r\n\
-\t\t\\Magento\\Store\\Model\\StoreManagerInterface $storeManager\r\n\
-\t) {\r\n\
-\t\t$this->_customerSession = $customerSession;\r\n\
-\t\t$this->_storeManager = $storeManager;\r\n\
-\t\tparent::__construct($context);\r\n\
-\t}\r\n\
-}";
+{\n\
+\t/**\n\
+\t* @param Session $_customerSession\n\
+\t* @param DateTime $_dateTime\n\
+\t* @param \\Magento\\Store\\Model\\StoreManagerInterface $_storeManager\n\
+\t* @param \\Magento\\Framework\\App\\Helper\\Context $context\n\
+\t*\/\n\
+\tpublic function __construct(\n\
+\t\tpublic CustomerSession $_customerSession,\n\
+\t\tpublic DateTime $_dateTime,\n\
+\t\tpublic \\Magento\\Store\\Model\\StoreManagerInterface $_storeManager,\n\
+\t\t\\Magento\\Framework\\App\\Helper\\Context $context\n\
+\t) {\n\
+\t\tparent::__construct($context);\n\
+\t}\n\
+}\n";
 exports.frontRouteTemplate = "<?xml version=\"1.0\"?>\r\n\
 \r\n\
 <config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:App/etc/routes.xsd\">\r\n\
@@ -59,33 +59,28 @@ exports.frontActionTemplate = "<?php\r\n\
 \r\n\
 namespace %module_name%\\Controller\\%controller%;\r\n\
 \r\n\
-use Magento\\Framework\\App\\Action\\Action;\r\n\
-use Magento\\Framework\\App\\Action\\Context;\r\n\
+use Magento\\Framework\\App\\ActionInterface;\r\n\
 use Magento\\Framework\\View\\Result\\PageFactory;\r\n\
 \r\n\
-class %class_name% extends Action\r\n\
+class %class_name% implements ActionInterface\r\n\
 {\r\n\
 \t/**\r\n\
-\t * @param Context $context\r\n\
-\t * @param PageFactory $resultPageFactory\r\n\
+\t * @param PageFactory $_resultPageFactory\r\n\
 \t */\r\n\
 \tpublic function __construct(\r\n\
-\t\tContext $context,\r\n\
-\t\tPageFactory $resultPageFactory\r\n\
+\t\tpublic PageFactory $_resultPageFactory\r\n\
 \t) {\r\n\
-\t\t$this->_resultPageFactory = $resultPageFactory;\r\n\
-\t\tparent::__construct($context);\r\n\
 \t}\r\n\
 \r\n\
 \tpublic function execute()\r\n\
 \t{\r\n\
 \t\t$resultPage = $this->_resultPageFactory->create();\r\n\
-\t\t$pageLabel = \"\";\r\n\
-\t\t$resultPage->getConfig()->getTitle()->set(__());\r\n\
+\t\t$pageLabel = __(\"\");\r\n\
+\t\t$resultPage->getConfig()->getTitle()->set($pageLabel);\r\n\
 \t\t$layout = $resultPage->getLayout();\r\n\
 \t\treturn $resultPage;\r\n\
 \t}\r\n\
-}";
+}\n";
 exports.adminActionTemplate = "<?php\r\n\
 \r\n\
 namespace %module_name%\\Controller\\%controller%;\r\n\
@@ -98,12 +93,10 @@ class %class_name% extends Action\r\n\
 {\r\n\
 \tpublic function __construct(\r\n\
 \t\tContext $context,\r\n\
-\t\tPageFactory $resultPageFactory,\r\n\
-\t\t\\Magento\\Backend\\Model\\View\\Result\\ForwardFactory $resultForwardFactory\r\n\
+\t\tpublic PageFactory $resultPageFactory,\r\n\
+\t\tpublic \\Magento\\Backend\\Model\\View\\Result\\ForwardFactory $resultForwardFactory\r\n\
 \t) {\r\n\
 \t\tparent::__construct($context);\r\n\
-\t\t$this->resultPageFactory = $resultPageFactory;\r\n\
-\t\t$this->resultForwardFactory = $resultForwardFactory;\r\n\
 \t}\r\n\
 \r\n\
 \t/**\r\n\
@@ -120,7 +113,7 @@ class %class_name% extends Action\r\n\
 \t{\r\n\
 \t\t\r\n\
 \t}\r\n\
-}";
+}\n";
 
 // shipping method file templates
 
@@ -202,21 +195,6 @@ class Carrier extends \\Magento\\Shipping\\Model\\Carrier\\AbstractCarrier imple
 \tprotected $_isFixed = true;\r\n\
 \r\n\
 \t/**\r\n\
-\t * @var \\Magento\\Shipping\\Model\\Rate\\ResultFactory\r\n\
-\t */\r\n\
-\tprotected $_rateResultFactory;\r\n\
-\r\n\
-\t/**\r\n\
-\t * @var \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory\r\n\
-\t */\r\n\
-\tprotected $_rateMethodFactory;\r\n\
-\t/**\r\n\
-\t * @param Session $customerSession\r\n\
-\t * @param \\Magento\\Framework\\App\\Helper\\Context $context\r\n\
-\t * @param \\Magento\\Store\\Model\\StoreManagerInterface $storeManager\r\n\
-\t *\/\r\n\
-\r\n\
-\t/**\r\n\
 \t * @param \\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig\r\n\
 \t * @param \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory\r\n\
 \t * @param \\Psr\\Log\\LoggerInterface $logger\r\n\
@@ -228,12 +206,10 @@ class Carrier extends \\Magento\\Shipping\\Model\\Carrier\\AbstractCarrier imple
 \t\t\\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig,\r\n\
 \t\t\\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory,\r\n\
 \t\t\\Psr\\Log\\LoggerInterface $logger,\r\n\
-\t\t\\Magento\\Shipping\\Model\\Rate\\ResultFactory $rateResultFactory,\r\n\
-\t\t\\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory $rateMethodFactory,\r\n\
+\t\tprotected \\Magento\\Shipping\\Model\\Rate\\ResultFactory $_rateResultFactory,\r\n\
+\t\tprotected \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory $_rateMethodFactory,\r\n\
 \t\tarray $data = []\r\n\
 \t)\t{\r\n\
-\t\t$this->_rateResultFactory = $rateResultFactory;\r\n\
-\t\t$this->_rateMethodFactory = $rateMethodFactory;\r\n\
 \t\tparent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);\r\n\
 \t}\r\n\
 \r\n\
@@ -275,7 +251,7 @@ class Carrier extends \\Magento\\Shipping\\Model\\Carrier\\AbstractCarrier imple
 \t{\r\n\
 \t\treturn ['%shipping_code%' => $this->getConfigData('name')];\r\n\
 \t}\r\n\
-}";
+}\n";
 
 // payment methods template
 

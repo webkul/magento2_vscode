@@ -23,8 +23,23 @@
             "\t\\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,",
             "\t'${1:Vendor_ModuleName}',",
             "\t__DIR__",
-            ");"
+            ")\n;"
         ],
         "description": "Inserts registration file data for Module component."
+    },
+    "Object Manager": {
+        "prefix": "!wkobjectmanager",
+        "body": [
+            "$$objectManager = \\Magento\\Framework\\App\\ObjectManager::getInstance();",
+            "$$object = $$objectManager->create(::class);"
+        ]
+    },
+    "Psr Logger": {
+        "prefix": "!wklogger",
+        "body": [
+            "$$objectManager = \\Magento\\Framework\\App\\ObjectManager::getInstance();",
+            "$$logger = $$objectManager->create(\\Psr\\Log\\LoggerInterface::class);",
+            "$$logger->info(\"\");"
+        ]
     }
 }

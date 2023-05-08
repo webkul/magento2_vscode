@@ -66,18 +66,18 @@
     "Create plugin": {
         "prefix": "!wkplugin",
         "body": [
-            "<type name=\"\">",
+            "<type name=\"$0\">",
             "\t<plugin name=\"\" type=\"\" sortOrder=\"\"/>",
             "</type>"
         ],
-        "description": "Create new plugin."
+        "description": "Create new Plugin."
     },
     "Create preference": {
         "prefix": "!wkpreference",
         "body": [
-            "<preference for=\"\" type=\"\"/>"
+            "<preference for=\"$0\" type=\"\"/>"
         ],
-        "description": "Create new preference."
+        "description": "Create new Preference."
     },
     "Create observer": {
         "prefix": "!wkobserver",
@@ -86,7 +86,7 @@
             "\t<observer name=\"\" instance=\"\" />",
             "</event>"
         ],
-        "description": "Create new observer."
+        "description": "Create new Observer."
     },
     "Creates events.xml": {
         "prefix": "!wkevents",
