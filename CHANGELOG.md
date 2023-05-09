@@ -31,3 +31,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Added shipping and payment method files generation.
 
 - Added autosuggestions for layout.xml, db_schema.xml and system.xml.
+
+## [1.0.5]
+
+- Compatible with VS code web application.
+
+
+## [1.0.6]
+
+- Added compatibility with PHP 8

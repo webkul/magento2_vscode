@@ -1,0 +1,26 @@
+{
+    "require.config (map)": {
+        "prefix": "require",
+        "body": [
+            "require.config({",
+            "\tmap: {",
+            "\t\t\"*\": {",
+            "\t\t\t\"$0\": ${1:\"\"}",
+            "\t\t}",
+            "\t}",
+            "});"
+        ],
+        "description": "Magento script initialization"
+    },
+    "require js code": {
+        "prefix": "require(jquery)",
+        "body": [
+            "require([",
+            "\t\"jquery\"",
+            "], function(jQuery) {",
+            "\t$0",
+            "});"
+        ],
+        "description": "Require jquery"
+    }
+}

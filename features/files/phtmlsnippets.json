@@ -1,0 +1,39 @@
+{
+    "Editor Script": {
+        "prefix": "wysiwyg",
+        "body": [
+            "<script>",
+            "\trequire([",
+            "\t\t\"jquery\",",
+            "\t\t\"mage/translate\",",
+            "\t\t\"mage/adminhtml/events\",",
+            "\t\t\"mage/adminhtml/wysiwyg/tiny_mce/setup\"",
+            "\t], function(jQuery) {",
+            "\t\twysiwygEditor = new wysiwygSetup(\"$0\", {",
+            "\t\t\t\"width\" : \"100%\",",
+            "\t\t\t\"height\" : \"200px\",",
+            "\t\t\t\"plugins\" : [{\"name\":\"image\"}],",
+            "\t\t\t\"tinymce4\" : {",
+            "\t\t\t\t\"toolbar\":\"formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap\",\"plugins\":\"advlist autolink lists link charmap media noneditable table contextmenu paste code help table\",",
+            "\t\t\t},",
+            "\t\t});",
+            "\t\twysiwygEditor.setup(\"exact\");",
+            "\t});",
+            "</script>"
+        ],
+        "description": "Inserts wysiwyg editor's script"
+    },
+    "text/x-magento-init": {
+        "prefix": "script",
+        "body": [
+            "<script type=\"text/x-magento-init\">",
+            "\t{",
+            "\t\t\"*\": {",
+            "\t\t\t\"${1:Component(path or alias)}\": {}",
+            "\t\t}",
+            "\t}",
+            "</script>"
+        ],
+        "description": "Magento script initialization"
+    }
+}
