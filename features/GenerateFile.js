@@ -86,8 +86,8 @@ function createControllerFile(moduleDir, moduleName, area, route, controller, ac
     ], actionTemplate = (area === "adminhtml") ? ft.adminActionTemplate : ft.frontActionTemplate,
     routeTemplate = (area === "adminhtml") ? ft.adminRouteTemplate : ft.frontRouteTemplate;
     actionTemplate = actionTemplate.replace('%module_name%', moduleName.replace('_', '\\'))
-                                    .replace('%controller%', controller.replace('/', '\\'))
-                                    .replace('%class_name%', action);
+                                    .replaceAll('%controller%', controller.replace('/', '\\'))
+                                    .replaceAll('%class_name%', action);
     routeTemplate = routeTemplate.replace('%module_name%', moduleName).replaceAll('%route%', route);
     let data = [
         new Uint8Array(str2ab_1.str2ab(actionTemplate)),

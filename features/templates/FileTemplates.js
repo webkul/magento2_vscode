@@ -4,38 +4,43 @@ exports.moduleXml = '<?xml version="1.0" ?>\r\n\
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">\r\n\
 \t<module name="%moduleName%"/>\r\n\
 </config>';
-exports.registrationPhp = "<?php\r\n\
-\\Magento\\Framework\\Component\\ComponentRegistrar::register(\r\n\
-    \t\\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,\r\n\
-    \t'%moduleName%',\r\n\
-    \t__DIR__\r\n\
+exports.registrationPhp = "<?php\n\
+\\Magento\\Framework\\Component\\ComponentRegistrar::register(\n\
+    \\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,\n\
+    '%moduleName%',\n\
+    __DIR__\n\
 );\n";
-exports.helperData = "<?php\r\n\
-\r\n\
-namespace %moduleName%\\Helper;\r\n\
-\r\n\
-use Magento\\Customer\\Model\\Session as CustomerSession;\r\n\
-use Magento\\Framework\\Stdlib\\DateTime\\DateTime;\r\n\
-\r\n\
-/**\r\n\
- * Helper class\r\n\
- *\/\r\n\
-class Data extends \\Magento\\Framework\\App\\Helper\\AbstractHelper\r\n\
+exports.helperData = "<?php\n\
+\n\
+namespace %moduleName%\\Helper;\n\
+\n\
+use Magento\\Framework\\App\\Helper\\AbstractHelper;\n\
+use Magento\\Store\\Model\\StoreManagerInterface;\n\
+use Magento\\Framework\\App\\Helper\\Context;\n\
+\n\
+/**\n\
+ * Helper class\n\
+ *\/\n\
+class Data extends AbstractHelper\n\
 {\n\
-\t/**\n\
-\t* @param Session $_customerSession\n\
-\t* @param DateTime $_dateTime\n\
-\t* @param \\Magento\\Store\\Model\\StoreManagerInterface $_storeManager\n\
-\t* @param \\Magento\\Framework\\App\\Helper\\Context $context\n\
-\t*\/\n\
-\tpublic function __construct(\n\
-\t\tpublic CustomerSession $_customerSession,\n\
-\t\tpublic DateTime $_dateTime,\n\
-\t\tpublic \\Magento\\Store\\Model\\StoreManagerInterface $_storeManager,\n\
-\t\t\\Magento\\Framework\\App\\Helper\\Context $context\n\
-\t) {\n\
-\t\tparent::__construct($context);\n\
-\t}\n\
+    /**\n\
+     * @var StoreManagerInterface\n\
+     *\/\n\
+    public $_storeManager;\n\
+\n\
+    /**\n\
+     * Helper class constructor\n\
+     *\n\
+     * @param StoreManagerInterface $_storeManager\n\
+     * @param Context $context\n\
+     *\/\n\
+    public function __construct(\n\
+        StoreManagerInterface $_storeManager,\n\
+        Context $context\n\
+    ) {\n\
+        $this->_storeManager = $_storeManager;\n\
+        parent::__construct($context);\n\
+    }\n\
 }\n";
 exports.frontRouteTemplate = "<?xml version=\"1.0\"?>\r\n\
 \r\n\
@@ -55,64 +60,109 @@ exports.adminRouteTemplate = "<?xml version=\"1.0\"?>\r\n\
 \t\t</route>\r\n\
 \t</router>\r\n\
 </config>";
-exports.frontActionTemplate = "<?php\r\n\
-\r\n\
-namespace %module_name%\\Controller\\%controller%;\r\n\
-\r\n\
-use Magento\\Framework\\App\\ActionInterface;\r\n\
-use Magento\\Framework\\View\\Result\\PageFactory;\r\n\
-\r\n\
-class %class_name% implements ActionInterface\r\n\
-{\r\n\
-\t/**\r\n\
-\t * @param PageFactory $_resultPageFactory\r\n\
-\t */\r\n\
-\tpublic function __construct(\r\n\
-\t\tpublic PageFactory $_resultPageFactory\r\n\
-\t) {\r\n\
-\t}\r\n\
-\r\n\
-\tpublic function execute()\r\n\
-\t{\r\n\
-\t\t$resultPage = $this->_resultPageFactory->create();\r\n\
-\t\t$pageLabel = __(\"\");\r\n\
-\t\t$resultPage->getConfig()->getTitle()->set($pageLabel);\r\n\
-\t\t$layout = $resultPage->getLayout();\r\n\
-\t\treturn $resultPage;\r\n\
-\t}\r\n\
+exports.frontActionTemplate = "<?php\n\
+\n\
+namespace %module_name%\\Controller\\%controller%;\n\
+\n\
+use Magento\\Framework\\App\\ActionInterface;\n\
+use Magento\\Framework\\View\\Result\\PageFactory;\n\
+\n\
+/**\n\
+ * %class_name% class for %controller%\n\
+ *\/\n\
+class %class_name% implements ActionInterface\n\
+{\n\
+    /**\n\
+     * @var PageFactory\n\
+     *\/\n\
+    public $_resultPageFactory;\n\
+    /**\n\
+     * %class_name% class constructor\n\
+     *\n\
+     * @param PageFactory $_resultPageFactory\n\
+     *\/\n\
+    public function __construct(\n\
+        PageFactory $_resultPageFactory\n\
+    ) {\n\
+        $this->_resultPageFactory = $_resultPageFactory;\n\
+    }\n\
+\n\
+    /**\n\
+     * %class_name% execute method\n\
+     *\n\
+     * @return \\Magento\\Framework\\View\\Result\\Page\n\
+     *\/\n\
+    public function execute()\n\
+    {\n\
+        $resultPage = $this->_resultPageFactory->create();\n\
+        $pageLabel = __(\"\");\n\
+        $resultPage->getConfig()->getTitle()->set($pageLabel);\n\
+        return $resultPage;\n\
+    }\n\
 }\n";
-exports.adminActionTemplate = "<?php\r\n\
-\r\n\
-namespace %module_name%\\Controller\\%controller%;\r\n\
-\r\n\
-use Magento\\Backend\\App\\Action;\r\n\
-use Magento\\Backend\\App\\Action\\Context;\r\n\
-use Magento\\Framework\\View\\Result\\PageFactory;\r\n\
-\r\n\
-class %class_name% extends Action\r\n\
-{\r\n\
-\tpublic function __construct(\r\n\
-\t\tContext $context,\r\n\
-\t\tpublic PageFactory $resultPageFactory,\r\n\
-\t\tpublic \\Magento\\Backend\\Model\\View\\Result\\ForwardFactory $resultForwardFactory\r\n\
-\t) {\r\n\
-\t\tparent::__construct($context);\r\n\
-\t}\r\n\
-\r\n\
-\t/**\r\n\
-\t * Check for is allowed\r\n\
-\t *\r\n\
-\t * @return boolean\r\n\
-\t */\r\n\
-\tprotected function _isAllowed()\r\n\
-\t{\r\n\
-\t\treturn $this->_authorization->isAllowed(\"resource_name\");\r\n\
-\t}\r\n\
-\r\n\
-\tpublic function execute()\r\n\
-\t{\r\n\
-\t\t\r\n\
-\t}\r\n\
+exports.adminActionTemplate = "<?php\n\
+\n\
+namespace %module_name%\\Controller\\%controller%;\n\
+\n\
+use Magento\\Backend\\App\\Action as AppAction;\n\
+use Magento\\Backend\\App\\Action\\Context;\n\
+use Magento\\Framework\\View\\Result\\PageFactory;\n\
+use Magento\\Backend\\Model\\View\\Result\\ForwardFactory;\n\
+\n\
+/**\n\
+ * %class_name% class for %controller%\n\
+ *\/\n\
+class %class_name% extends AppAction\n\
+{\n\
+    /**\n\
+     * @var PageFactory\n\
+     *\/\n\
+    public $_resultPageFactory;\n\
+\n\
+    /**\n\
+     * @var ForwardFactory\n\
+     *\/\n\
+    public $_resultForwardFactory;\n\
+\n\
+    /**\n\
+     * %class_name% class constructor\n\
+     *\n\
+     * @param Context $context\n\
+     * @param PageFactory $_resultPageFactory\n\
+     * @param ForwardFactory $_resultForwardFactory\n\
+     *\/\n\
+    public function __construct(\n\
+        Context $context,\n\
+        PageFactory $_resultPageFactory,\n\
+        ForwardFactory $_resultForwardFactory\n\
+    ) {\n\
+        $this->_resultPageFactory = $_resultPageFactory;\n\
+        $this->_resultForwardFactory = $_resultForwardFactory;\n\
+        parent::__construct($context);\n\
+    }\n\
+\n\
+    /**\n\
+     * %class_name% execute method\n\
+     *\n\
+     * @return \\Magento\\Backend\\Model\\View\\Result\\Page\n\
+     *\/\n\
+    public function execute()\n\
+    {\n\
+        $resultPage = $this->_resultPageFactory->create();\n\
+        $pageLabel = __(\"\");\n\
+        $resultPage->getConfig()->getTitle()->set($pageLabel);\n\
+        return $resultPage;\n\
+    }\n\
+\n\
+    /**\n\
+     * Check for is allowed\n\
+     *\n\
+     * @return boolean\n\
+     */\n\
+    protected function _isAllowed()\n\
+    {\n\
+        return $this->_authorization->isAllowed(\"resource_name\");\n\
+    }\n\
 }\n";
 
 // shipping method file templates
@@ -173,84 +223,100 @@ exports.configXmlTemplate = "<?xml version=\"1.0\"?>\r\n\
 \t</default>\r\n\
 </config>";
 
-exports.carrierFileTemplate = "<?php\r\n\
-\r\n\
-namespace %moduleName%\\Model\\%name%;\r\n\
-\r\n\
-use Magento\\Quote\\Model\\Quote\\Address\\RateRequest;\r\n\
-\r\n\
-/**\r\n\
- * Shipping Model.\r\n\
- *\/\r\n\
-class Carrier extends \\Magento\\Shipping\\Model\\Carrier\\AbstractCarrier implements \\Magento\\Shipping\\Model\\Carrier\\CarrierInterface\r\n\
-{\r\n\
-\t/**\r\n\
-\t * @var string\r\n\
-\t */\r\n\
-\tprotected $_code = '%shipping_code%';\r\n\
-\r\n\
-\t/**\r\n\
-\t * @var bool\r\n\
-\t */\r\n\
-\tprotected $_isFixed = true;\r\n\
-\r\n\
-\t/**\r\n\
-\t * @param \\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig\r\n\
-\t * @param \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory\r\n\
-\t * @param \\Psr\\Log\\LoggerInterface $logger\r\n\
-\t * @param \\Magento\\Shipping\\Model\\Rate\\ResultFactory $rateResultFactory\r\n\
-\t * @param \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory $rateMethodFactory\r\n\
-\t * @param array $data\r\n\
-\t */\r\n\
-\tpublic function __construct(\r\n\
-\t\t\\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig,\r\n\
-\t\t\\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory,\r\n\
-\t\t\\Psr\\Log\\LoggerInterface $logger,\r\n\
-\t\tprotected \\Magento\\Shipping\\Model\\Rate\\ResultFactory $_rateResultFactory,\r\n\
-\t\tprotected \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory $_rateMethodFactory,\r\n\
-\t\tarray $data = []\r\n\
-\t)\t{\r\n\
-\t\tparent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);\r\n\
-\t}\r\n\
-\r\n\
-\t/**\r\n\
-\t * Rates Collector\r\n\
-\t *\r\n\
-\t * @param RateRequest $request\r\n\
-\t * @return \\Magento\\Shipping\\Model\\Rate\\Result|bool\r\n\
-\t */\r\n\
-\tpublic function collectRates(RateRequest $request)\r\n\
-\t{\r\n\
-\t\tif (!$this->getConfigFlag('active')) {\r\n\
-\t\t    return false;\r\n\
-\t\t}\r\n\
-\t\t\r\n\
-\t\t/** @var \\Magento\\Shipping\\Model\\Rate\\Result $result */\r\n\
-\t\t$result = $this->_rateResultFactory->create();\r\n\
-\t\t\r\n\
-\t\t$method = $this->_rateMethodFactory->create();\r\n\
-\t\t$method->setCarrier('%shipping_code%');\r\n\
-\t\t$method->setCarrierTitle($this->getConfigData('title'));\r\n\
-\t\t\r\n\
-\t\t$method->setMethod('%shipping_code%');\r\n\
-\t\t$method->setMethodTitle($this->getConfigData('name'));\r\n\
-\t\t\r\n\
-\t\t$method->setPrice($this->getConfigData('price'));\r\n\
-\t\t$method->setCost($this->getConfigData('price'));\r\n\
-\t\t$result->append($method);\r\n\
-\t\t\r\n\
-\t\treturn $result;\r\n\
-\t}\r\n\
-\r\n\
-\t/**\r\n\
-\t * Returns allowed shipping methods\r\n\
-\t *\r\n\
-\t * @return array\r\n\
-\t */\r\n\
-\tpublic function getAllowedMethods()\r\n\
-\t{\r\n\
-\t\treturn ['%shipping_code%' => $this->getConfigData('name')];\r\n\
-\t}\r\n\
+exports.carrierFileTemplate = "<?php\n\
+\n\
+namespace %moduleName%\\Model\\%name%;\n\
+\n\
+use Magento\\Quote\\Model\\Quote\\Address\\RateRequest;\n\
+use Magento\\Shipping\\Model\\Carrier\\AbstractCarrier;\n\
+use Magento\\Shipping\\Model\\Carrier\\CarrierInterface;\n\
+use Magento\\Shipping\\Model\\Rate\\ResultFactory;\n\
+use Magento\\Quote\\Model\\Quote\\Address\\RateResult\\MethodFactory;\n\
+\n\
+/**\n\
+ * Shipping Model.\n\
+ *\/\n\
+class Carrier extends AbstractCarrier implements CarrierInterface\n\
+{\n\
+    /**\n\
+     * @var string\n\
+     */\n\
+    protected $_code = '%shipping_code%';\n\
+\n\
+    /**\n\
+     * @var bool\n\
+     */\n\
+    protected $_isFixed = true;\n\
+\n\
+    /**\n\
+     * @var ResultFactory\n\
+     */\n\
+    protected $_rateResultFactory;\n\
+\n\
+    /**\n\
+     * @var MethodFactory\n\
+     */\n\
+    protected $_rateMethodFactory;\n\
+\n\
+    /**\n\
+     * @param \\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig\n\
+     * @param \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory\n\
+     * @param \\Psr\\Log\\LoggerInterface $logger\n\
+     * @param ResultFactory $_rateResultFactory\n\
+     * @param MethodFactory $_rateMethodFactory\n\
+     * @param array $data\n\
+     */\n\
+    public function __construct(\n\
+        \\Magento\\Framework\\App\\Config\\ScopeConfigInterface $scopeConfig,\n\
+        \\Magento\\Quote\\Model\\Quote\\Address\\RateResult\\ErrorFactory $rateErrorFactory,\n\
+        \\Psr\\Log\\LoggerInterface $logger,\n\
+        ResultFactory $_rateResultFactory,\n\
+        MethodFactory $_rateMethodFactory,\n\
+        array $data = []\n\
+    ) {\n\
+        $this->_rateResultFactory = $_rateResultFactory;\n\
+        $this->_rateMethodFactory = $_rateMethodFactory;\n\
+        parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);\n\
+    }\n\
+\n\
+    /**\n\
+     * Rates Collector\n\
+     *\n\
+     * @param RateRequest $request\n\
+     * @return \\Magento\\Shipping\\Model\\Rate\\Result|bool\n\
+     */\n\
+    public function collectRates(RateRequest $request)\n\
+    {\n\
+        if (!$this->getConfigFlag('active')) {\n\
+            return false;\n\
+        }\n\
+        \n\
+        /** @var \\Magento\\Shipping\\Model\\Rate\\Result $result */\n\
+        $result = $this->_rateResultFactory->create();\n\
+        \n\
+        $method = $this->_rateMethodFactory->create();\n\
+        $method->setCarrier('%shipping_code%');\n\
+        $method->setCarrierTitle($this->getConfigData('title'));\n\
+        \n\
+        $method->setMethod('%shipping_code%');\n\
+        $method->setMethodTitle($this->getConfigData('name'));\n\
+        \n\
+        $method->setPrice($this->getConfigData('price'));\n\
+        $method->setCost($this->getConfigData('price'));\n\
+        $result->append($method);\n\
+        \n\
+        return $result;\n\
+    }\n\
+\n\
+    /**\n\
+     * Returns allowed shipping methods\n\
+     *\n\
+     * @return array\n\
+     */\n\
+    public function getAllowedMethods()\n\
+    {\n\
+        return ['%shipping_code%' => $this->getConfigData('name')];\n\
+    }\n\
 }\n";
 
 // payment methods template
@@ -287,19 +353,20 @@ exports.configXmlPaymentTemplate = "<?xml version=\"1.0\"?>\r\n\
 \t</default>\r\n\
 </config>";
 
-exports.paymentModelTemplate = "<?php\r\n\
-\r\n\
-namespace %moduleName%\\Model;\r\n\
-\r\n\
-/**\r\n\
- * %filename% Class\r\n\
- */\r\n\
-class %filename% extends \\Magento\\Payment\\Model\\Method\\AbstractMethod\r\n\
-{\r\n\
-\t    \r\n\
-\t    protected $_code = '%payment_code%';\r\n\
-\t\r\n\
-}";
+exports.paymentModelTemplate = "<?php\n\
+\n\
+namespace %moduleName%\\Model;\n\
+\n\
+/**\n\
+ * %filename% Class for Payment Method\n\
+ */\n\
+class %filename% extends \\Magento\\Payment\\Model\\Method\\AbstractMethod\n\
+{\n\
+    /**\n\
+     * @var string\n\
+     */\n\
+    protected $_code = '%payment_code%';\n\
+}\n";
 
 exports.paymentlayoutFileTemplate = "<?xml version=\"1.0\"?>\r\n\
 \r\n\
@@ -351,7 +418,7 @@ exports.paymentHtmlTemplate = "<div class=\"payment-method\" data-bind=\"css: {'
 \t\t<input type=\"radio\"\r\n\
 \t\t\tname=\"payment[method]\"\r\n\
 \t\t\tclass=\"radio\"\r\n\
-\t\t\tdata-bind=\"attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()\"/>\r\n\
+\t\t\tdata-bind=\"attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()\">\r\n\
 \t\t<label data-bind=\"attr: {'for': getCode()}\" class=\"label\"><span data-bind=\"text: getTitle()\"></span></label>\r\n\
 \t</div>\r\n\
 \t<div class=\"payment-method-content\">\r\n\

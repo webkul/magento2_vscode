@@ -18,7 +18,6 @@
         "prefix": "!wkregistration",
         "body": [
             "<?php",
-            "",
             "\\Magento\\Framework\\Component\\ComponentRegistrar::register(",
             "\t\\Magento\\Framework\\Component\\ComponentRegistrar::MODULE,",
             "\t'${1:Vendor_ModuleName}',",
